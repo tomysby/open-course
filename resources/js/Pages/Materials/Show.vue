@@ -1,6 +1,6 @@
 <!-- Resources/js/Pages/Materials/Show.vue -->
 <template>
-  <AppLayout>
+  <AuthenticatedLayout>
     <div class="py-12">
       <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
         <div v-if="material.status !== 'approved'" class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
@@ -74,11 +74,11 @@
       </div>
     </div>
     <Comments :material="material" :comments="material.comments" />
-  </AppLayout>
+  </AuthenticatedLayout>
 </template>
 
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { ExclamationIcon } from '@heroicons/vue/outline';
 
 defineProps({

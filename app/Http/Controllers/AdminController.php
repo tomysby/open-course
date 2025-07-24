@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\UsersExport;
+use App\Models\EducationalMaterial;
 
 class AdminController extends Controller
 {
@@ -20,15 +21,15 @@ class AdminController extends Controller
     {
         $stats = [
             'total_users' => User::count(),
-            'total_courses' => Course::count(),
-            'pending_courses' => Course::where('is_published', false)->count(),
+            'total_courses' => EducationalMaterial::count(),
+            'pending_courses' => EducationalMaterial::where('status', 'pending')->count(),
             'total_categories' => Category::count(),
         ];
 
         return Inertia::render('Admin/Dashboard', [
             'stats' => $stats,
             'recentUsers' => User::with('role')->latest()->take(5)->get(),
-            'recentCourses' => Course::with(['category', 'user'])->latest()->take(5)->get(),
+            'recentCourses' => EducationalMaterial::with(['category', 'user'])->where('status', 'approved')->latest()->take(5)->get(),
         ]);
     }
 

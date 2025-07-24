@@ -10,6 +10,9 @@
                   <ApplicationLogo class="block h-9 w-auto" />
                 </Link>
               </div>
+              <div class="flex-shrink-0 flex items-center">
+                <h1 class="text-3xl font-bold text-gray-900">&nbsp;&nbsp;&nbsp;Open Course</h1>
+              </div>
             </div>
             <div class="flex items-center space-x-4">
               <Link :href="route('login')" class="text-gray-600 hover:text-gray-900">
@@ -24,11 +27,11 @@
       </nav>
   
       <!-- Header -->
-      <header class="bg-white shadow">
+      <!--header class="bg-white shadow">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 class="text-3xl font-bold text-gray-900">Materi Edukasi</h1>
+          <h1 class="text-3xl font-bold text-gray-900">Open Course</h1>
         </div>
-      </header>
+      </header-->
   
       <!-- Main Content -->
       <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
