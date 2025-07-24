@@ -45,9 +45,9 @@ const isAdmin = () => {
                                 <NavLink v-if="isAdmin()" :href="route('admin.categories')" :active="route().current('admin.categories')">
                                     Kategori
                                 </NavLink>
-                                <!--NavLink :href="route('admin.courses')" :active="route().current('admin.courses')">
-                                    Courses
-                                </NavLink-->
+                                <NavLink v-if="isAdmin()" :href="route('admin.tags')" :active="route().current('admin.tags')">
+                                    Tag
+                                </NavLink>
                                 <NavLink :href="route('materials.index')" :active="route().current('materials.index')">
                                     Materi Edukasi
                                 </NavLink>
@@ -169,9 +169,9 @@ const isAdmin = () => {
                         <ResponsiveNavLink v-if="isAdmin()" :href="route('admin.categories')" :active="route().current('admin.categories')">
                             Kategori
                         </ResponsiveNavLink>
-                        <!--ResponsiveNavLink :href="route('admin.courses')" :active="route().current('admin.courses')">
-                            Courses
-                        </ResponsiveNavLink-->
+                        <ResponsiveNavLink v-if="isAdmin()" :href="route('admin.tags')" :active="route().current('admin.tags')">
+                            Tag
+                        </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('materials.index')" :active="route().current('materials.index')">
                             Materi Edukasi
                         </ResponsiveNavLink>

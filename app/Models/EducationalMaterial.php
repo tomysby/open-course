@@ -9,7 +9,7 @@ class EducationalMaterial extends Model
 {
     protected $fillable = [
         'user_id', 'title', 'content', 'type', 
-        'file_path', 'thumbnail_path', 'status', 'rejection_reason'
+        'file_path', 'thumbnail_path', 'status', 'rejection_reason', 'category_id'
     ];
 
     protected $casts = [
@@ -40,7 +40,7 @@ class EducationalMaterial extends Model
         if ($this->thumbnail_path) {
             return Storage::url($this->thumbnail_path);
         }
-        return asset('images/default-thumbnail.jpg');
+        return asset('images/default-thumbnail.png');
     }
 
     public function getFileExtensionAttribute()

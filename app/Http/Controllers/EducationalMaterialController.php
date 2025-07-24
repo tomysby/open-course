@@ -19,7 +19,7 @@ class EducationalMaterialController extends Controller
             ->latest();
 
         // Jika bukan admin, hanya tampilkan yang approved
-        if (!auth()->user()->isAdmin()) {
+        if (auth()->user()?->isAdmin() !== true) {
             $query->where('status', 'approved');
         }
 
@@ -70,12 +70,15 @@ class EducationalMaterialController extends Controller
             'user_id' => auth()->id(),
             'title' => $request->title,
             'type' => $request->type,
+            'category_id' => $request->category_id ?? null,
             'content' => $request->content ?? null,
             'status' => 'pending'
         ]);
 
         if ($request->hasFile('file')) {
-            $path = $request->file('file')->store('educational-materials');
+            //$path = $request->file('file')->store('educational-materials');
+            $filename = $request->file('file')->hashName();
+            $path = $request->file('file')->storeAs('', $filename, 'educational-materials');
             $material->file_path = $path;
 
             // For video thumbnails (optional)
@@ -117,7 +120,7 @@ class EducationalMaterialController extends Controller
             'rejection_reason' => $request->reason
         ]);
         
-        return back()->with('success', 'Material rejected');
+        return redirect()->route('materials.index')->with('success', 'Material rejected');
     }
 
     protected function generateVideoThumbnail($videoFile)
@@ -133,7 +136,7 @@ class EducationalMaterialController extends Controller
         $frame = $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(1));
         $frame->save(storage_path('app/public/'.$thumbnailPath));
         
-        return $thumbnailPath;
+        return $thumbnailName;
     }
 
     public function show(EducationalMaterial $material)
@@ -142,10 +145,16 @@ class EducationalMaterialController extends Controller
         //$this->authorize('view', $material);
 
         return inertia('EducationalMaterials/Show', [
-            'material' => $material->load(['user', 'category', 'tags']),
+            'material' => $material->load([
+                'user',
+                'category',
+                'tags',
+                'comments.user', // Load komentar beserta user pembuatnya
+                'comments.replies.user' // Load balasan komentar beserta user pembuatnya
+            ]),
             'canEdit' => auth()->user()->can('update', $material),
             'canReview' => auth()->user()->can('review', $material),
-            'canDelete' => auth()->user()->can('delete', $material)
+            'canDelete' => auth()->user()->can('delete', $material),
         ]);
     }
 }

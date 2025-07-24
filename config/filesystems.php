@@ -59,7 +59,13 @@ return [
             'throw' => false,
             'report' => false,
         ],
-
+        'educational-materials' => [
+            'driver' => 'local',
+            'root' => storage_path('app/educational-materials'),
+            'url' => env('APP_URL').'/files',
+            'visibility' => 'private', // Keep materials private
+            'throw' => false,
+        ],
     ],
 
     /*
@@ -82,11 +88,5 @@ return [
         'root' => public_path('uploads'),
         'url' => env('APP_URL') . '/uploads',
         'visibility' => 'public',
-    ],
-    'educational-materials' => [
-        'driver' => 'local',
-        'root' => storage_path('app/educational-materials'),
-        'url' => env('APP_URL').'/materials',
-        'visibility' => 'private', // Keep materials private
     ],
 ];

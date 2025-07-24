@@ -18,21 +18,21 @@
           <!-- Stats Cards -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <StatCard 
-              title="Total Courses" 
+              title="Jumlah Materi" 
               :value="stats.courses" 
               icon="academic-cap"
               color="blue"
               :change="12"
             />
             <StatCard 
-              title="Active Students" 
+              title="Anggota Aktif" 
               :value="stats.students" 
               icon="users"
               color="green"
               :change="8"
             />
             <StatCard 
-              title="New Materials" 
+              title="Kategori" 
               :value="stats.materials" 
               icon="document-text"
               color="indigo"
@@ -59,7 +59,7 @@
                       View All
                     </Link>
                   </div>
-                  <CourseList :courses="recentCourses" />
+                  <EducationalMaterialList :courses="recentCourses" />
                 </div>
               </div>
             </div>
@@ -72,13 +72,13 @@
                   <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
                   <div class="space-y-3">
                     <Link 
-                      :href="route('courses.create')" 
+                      :href="route('materials.create')" 
                       class="flex items-center p-3 border rounded-lg hover:bg-gray-50 transition-colors"
                     >
                       <svg class="h-5 w-5 text-gray-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                       </svg>
-                      <span>Create New Course</span>
+                      <span>Buat Materi Baru</span>
                     </Link>
                     <Link 
                       :href="route('profile.edit')" 
@@ -87,7 +87,7 @@
                       <svg class="h-5 w-5 text-gray-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
-                      <span>Update Profile</span>
+                      <span>Update Profil</span>
                     </Link>
                   </div>
                 </div>
@@ -114,8 +114,8 @@
 import { Head, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import StatCard from '@/Components/StatCard.vue';
-import CourseList from '@/Components/CourseList.vue';
 import ProgressChart from '@/Components/ProgressChart.vue';
+import EducationalMaterialList from '@/Components/EducationalMaterialList.vue';
 
 defineProps({
   stats: {

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,7 @@ use App\Http\Controllers\AdminController;
 use App\Models\Course;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\VideoStreamController;
 
 Route::get('/', [EducationalMaterialController::class, 'index'])->name('home');
 
@@ -32,15 +34,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Materials
     Route::get('/courses/{course}/materials/{material}', [MaterialController::class, 'show'])
         ->name('materials.show');
+    Route::get('/files/{filename}', [VideoStreamController::class, 'stream'])->name('materials.stream');
     Route::resource('materials', EducationalMaterialController::class)
         ->only(['index', 'create', 'store', 'show']);
     
     // Comments
     Route::post('/courses/{course}/materials/{material}/comments', [CommentController::class, 'store'])
         ->name('comments.store');
-    Route::post('/materials/{material}/comments', [CommentController::class, 'store'])
-        ->name('comments.store')
-        ->middleware('auth');
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    //Route::post('/materials/{material}/comments', [CommentController::class, 'store'])->name('comments.store')->middleware('auth');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
         ->name('comments.destroy')
         ->middleware('auth');
@@ -83,6 +85,14 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('admin.categories.edit');
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('admin.categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
+
+    // Tags routes
+    Route::get('/tags', [TagController::class, 'index'])->name('admin.tags');
+    Route::get('/tags/create', [TagController::class, 'create'])->name('admin.tags.create');
+    Route::post('/tags', [TagController::class, 'store'])->name('admin.tags.store');
+    Route::get('/tags/{tag}/edit', [TagController::class, 'edit'])->name('admin.tags.edit');
+    Route::put('/tags/{category}', [TagController::class, 'update'])->name('admin.tags.update');
+    Route::delete('/tags/{category}', [TagController::class, 'destroy'])->name('admin.tags.destroy');
 
     Route::post('/materials/{material}/approve', [EducationalMaterialController::class, 'approve'])
             ->name('materials.approve');

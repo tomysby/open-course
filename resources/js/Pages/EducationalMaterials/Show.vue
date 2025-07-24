@@ -79,15 +79,25 @@
                 </div>
                 
                 <div v-else-if="material.type === 'pdf'" class="w-full h-screen">
-                  <iframe :src="'/storage/' + material.file_path" 
+                  <iframe :src="route('materials.stream', material.file_path)" 
                           class="w-full h-full border rounded-lg"></iframe>
                 </div>
                 
                 <div v-else-if="material.type === 'video'" class="w-full">
-                  <video controls class="w-full rounded-lg">
-                    <source :src="'/storage/' + material.file_path" type="video/mp4">
-                    Browser Anda tidak mendukung pemutaran video.
-                  </video>
+                    <video controls class="w-full rounded-lg" :poster="material.thumbnail_path ? route('materials.stream', material.thumbnail_path.split('/').pop()) : ''">
+                        <source :src="route('materials.stream', material.file_path)" type="video/mp4">
+                        Browser Anda tidak mendukung pemutaran video.
+                    </video>
+                    <div class="mt-2 text-sm text-gray-500">
+                        <a :href="route('materials.stream', material.file_path.split('/').pop())" 
+                        download 
+                        class="text-blue-600 hover:text-blue-800 inline-flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Download Video
+                        </a>
+                    </div>
                 </div>
                 
                 <div v-else-if="material.type === 'audio'" class="w-full">
@@ -174,6 +184,10 @@
         </div>
       </Modal>
     </AuthenticatedLayout>
+    <CommentSection 
+    :material-id="material.id" 
+    :initial-comments="material.comments" 
+    />
   </template>
   
   <script setup>
@@ -181,6 +195,7 @@
   import { Link, router } from '@inertiajs/vue3';
   import { ref } from 'vue';
   import Modal from '@/Components/Modal.vue';
+  import CommentSection from '@/Components/Comments/CommentSection.vue';
   
   const props = defineProps({
     material: Object,

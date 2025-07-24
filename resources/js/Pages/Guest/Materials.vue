@@ -37,16 +37,11 @@
             <div v-for="material in materials.data" :key="material.id" 
                  class="bg-white overflow-hidden shadow rounded-lg">
               <!-- Thumbnail -->
-              <img :src="material.thumbnail_path || '/images/default-thumbnail.jpg'" 
+              <img :src="material.thumbnail_path || '/images/default-thumbnail.png'" 
                    :alt="material.title"
-                   class="w-full h-48 object-cover">
+                   class="w-fit h-fit object-cover">
               
               <div class="p-4">
-                <h3 class="text-lg font-semibold text-gray-900">{{ material.title }}</h3>
-                <p class="mt-2 text-sm text-gray-600">
-                  {{ material.excerpt || material.content.substring(0, 100) + '...' }}
-                </p>
-                
                 <div class="mt-4 flex justify-between items-center">
                   <span class="text-sm text-gray-500">
                     {{ material.category?.name || 'Uncategorized' }}

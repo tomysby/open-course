@@ -89,26 +89,39 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">
                   File <span class="text-red-500">*</span>
                 </label>
-                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
-                  <div class="space-y-1 text-center">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                      <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                    <div class="flex text-sm text-gray-600">
-                      <label class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
-                        <span>Upload a file</span>
-                        <input type="file" @change="form.file = $event.target.files[0]" class="sr-only">
-                      </label>
-                      <p class="pl-1">or drag and drop</p>
+                <div 
+                    class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg drop-zone"
+                    @drop.prevent="handleDrop"
+                    @dragover.prevent="handleDragOver"
+                    :class="{ 'drop-zone-active': form.type !== 'article' && isDragging }"
+                    >
+                    <div class="space-y-1 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <div class="flex text-sm text-gray-600 justify-center">
+                        <label class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                            <span>Upload a file</span>
+                            <input 
+                            type="file" 
+                            @change="form.file = $event.target.files[0]" 
+                            class="sr-only"
+                            :accept="fileAccept"
+                            >
+                        </label>
+                        <p class="pl-1">or drag and drop</p>
+                        </div>
+                        <p class="text-xs text-gray-500">
+                        <template v-if="form.type === 'image'">PNG, JPG, GIF up to 2MB</template>
+                        <template v-else-if="form.type === 'pdf'">PDF up to 5MB</template>
+                        <template v-else-if="form.type === 'audio'">MP3, WAV up to 10MB</template>
+                        <template v-else-if="form.type === 'video'">MP4, MOV, AVI up to 20MB</template>
+                        </p>
+                        <p v-if="form.file" class="text-sm text-green-600 mt-2">
+                        File selected: {{ form.file.name }} ({{ (form.file.size / 1024 / 1024).toFixed(2) }}MB)
+                        </p>
                     </div>
-                    <p class="text-xs text-gray-500">
-                      <template v-if="form.type === 'image'">PNG, JPG, GIF up to 2MB</template>
-                      <template v-else-if="form.type === 'pdf'">PDF up to 5MB</template>
-                      <template v-else-if="form.type === 'audio'">MP3, WAV up to 10MB</template>
-                      <template v-else-if="form.type === 'video'">MP4, MOV, AVI up to 20MB</template>
-                    </p>
-                  </div>
-                </div>
+                    </div>
                 <p v-if="form.errors.file" class="mt-1 text-sm text-red-600">{{ form.errors.file }}</p>
               </div>
   
@@ -117,14 +130,28 @@
                   Tags
                 </label>
                 <Multiselect
-                  v-model="form.tags"
-                  mode="tags"
-                  :options="tagsOptions"
-                  placeholder="Select tags"
-                  :close-on-select="false"
-                  :searchable="true"
-                  class="form-multiselect"
-                />
+                    v-model="form.tags"
+                    mode="tags"
+                    :options="tagsOptions"
+                    placeholder="Select tags"
+                    :close-on-select="false"
+                    :searchable="true"
+                    class="form-multiselect"
+                    >
+                    <template #tag="{ option, handleTagRemove }">
+                        <div class="multiselect-tag is-primary bg-blue-100 text-blue-800 rounded-full py-1 px-3 flex items-center text-sm">
+                        {{ option.label }}
+                        <span 
+                            @click="handleTagRemove(option, $event)"
+                            class="multiselect-tag-remove ml-1 hover:text-blue-600"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        </div>
+                    </template>
+                    </Multiselect>
               </div>
   
               <div class="flex items-center justify-end pt-6 border-t border-gray-100">
@@ -179,69 +206,86 @@
     form.content = '';
     form.file = null;
   };
-  
-  const submit = () => {
-    if (form.type !== 'article' && form.file) {
-        const maxSize = {
-            image: 2 * 1024 * 1024,
-            pdf: 5 * 1024 * 1024,
-            audio: 10 * 1024 * 1024,
-            video: 20 * 1024 * 1024,
-        }[form.type];
-        
-        if (form.file.size > maxSize) {
-            alert(`File size exceeds maximum allowed for ${form.type} (${maxSize/1024/1024}MB)`);
-            return;
-        }
-    }
-    // Use router instead of route to avoid naming conflict
-    if (form.type === 'article') {
-        form.post(route('materials.store'), {
-            preserveScroll: true,
-            onSuccess: () => form.reset(),
-            forceFormData: form.type !== 'article', // Only force form data for file uploads
-            onError: (errors) => {
-                form.errors = errors;
-            }            
-        });
-    } else {
-    // For file uploads, we need to convert the form to FormData
-    const formData = new FormData();
-    formData.append('title', form.title);
-    formData.append('type', form.type);
-    formData.append('category_id', form.category_id || '');
-    formData.append('file', form.file);
+  // Handle file drop
+    const handleDrop = (e) => {
+    e.preventDefault();
+    if (form.type === 'article') return;
     
-    // Handle tags if present
-    if (form.tags && form.tags.length > 0) {
-      form.tags.forEach(tag => {
-        formData.append('tags[]', tag);
-      });
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        form.file = files[0];
+    }
+    };
+
+    const handleDragOver = (e) => {
+    e.preventDefault();
+    };
+
+  const submit = () => {
+    // File validation
+    if (form.type !== 'article') {
+        if (!form.file) {
+        alert('Please select a file');
+        return;
+        }
+
+        const maxSizes = {
+        image: 2 * 1024 * 1024,
+        pdf: 5 * 1024 * 1024,
+        audio: 10 * 1024 * 1024,
+        video: 20 * 1024 * 1024,
+        };
+
+        if (form.file.size > maxSizes[form.type]) {
+        alert(`File size exceeds maximum allowed for ${form.type} (${maxSizes[form.type]/1024/1024}MB)`);
+        return;
+        }
+
+        // File type validation
+        const validExtensions = {
+        image: ['image/jpeg', 'image/png', 'image/gif'],
+        pdf: ['application/pdf'],
+        audio: ['audio/mpeg', 'audio/wav'],
+        video: ['video/mp4', 'video/quicktime', 'video/x-msvideo']
+        };
+
+        if (!validExtensions[form.type].includes(form.file.type)) {
+        alert(`Invalid file type for ${form.type}`);
+        return;
+        }
     }
 
-    // Use axios or Inertia's router for the file upload
-    router.post(router.route('materials.store'), formData, {
-      preserveScroll: true,
-      onSuccess: () => form.reset(),
-      onError: (errors) => {
-        form.errors = errors;
-      },
-      onProgress: (progress) => {
-            console.log(`Upload progress: ${progress.percentage}%`);
+    // Submit form
+    form.post(route('materials.store'), {
+        preserveScroll: true,
+        forceFormData: true, // Always use FormData for file uploads
+        onSuccess: () => form.reset(),
+        onError: (errors) => {
+        console.error('Submission error:', errors);
+        },
+        onProgress: (progress) => {
+        console.log(`Upload progress: ${progress.percentage}%`);
         }
     });
-  }
-};
+    };
   </script>
   
   <style scoped>
-  .btn-primary {
-    @apply inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200 transition ease-in-out duration-150;
-  }
-  
-  .form-input {
-    @apply block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300;
-  }
+  .drop-zone {
+  @apply border-2 border-dashed border-gray-300 rounded-lg;
+}
+
+.drop-zone-active {
+  @apply border-blue-500 bg-blue-50;
+}
+
+.btn-primary {
+  @apply inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200 transition ease-in-out duration-150;
+}
+
+.form-input {
+  @apply block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300;
+}
   
   .form-select {
     @apply block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300;
@@ -254,4 +298,45 @@
   .form-multiselect {
     @apply block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300;
   }
+
+  .multiselect-tag {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.5rem;
+  margin-bottom: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.multiselect-tag-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding-left: 0.25rem;
+  opacity: 0.7;
+}
+
+.multiselect-tag-remove:hover {
+  opacity: 1;
+}
+
+/* Style untuk dropdown options */
+:deep(.multiselect-option) {
+  padding: 0.5rem 1rem;
+}
+
+:deep(.multiselect-option.is-selected) {
+  background-color: #3b82f6;
+  color: white;
+}
+
+:deep(.multiselect-option.is-pointed) {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
   </style>
