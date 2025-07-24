@@ -14,18 +14,9 @@ use App\Models\Course;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\DashboardController;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'courses' => Course::where('is_published', true)
-            ->with('category')
-            ->latest()
-            ->take(3)
-            ->get(),
-    ]);
-});
+Route::get('/', [EducationalMaterialController::class, 'index'])->name('home');
 
 Route::get('/courses/search', [CourseController::class, 'search'])->name('courses.search');
-
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return auth()->user()->role->name === 'admin' 

@@ -2,20 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\EducationalMaterial;
+use App\Models\Tag;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class EducationalMaterialController extends Controller
 {
+    use AuthorizesRequests;
     public function index()
     {
-        $materials = EducationalMaterial::with('user')
-            ->when(auth()->user()->isAdmin(), fn($q) => $q->where('status', 'pending'))
-            ->when(!auth()->user()->isAdmin(), fn($q) => $q->where('user_id', auth()->id()))
-            ->latest()
-            ->paginate(10);
+        $query = EducationalMaterial::query()
+            ->with(['user', 'category', 'tags'])
+            ->latest();
 
+        // Jika bukan admin, hanya tampilkan yang approved
+        if (!auth()->user()->isAdmin()) {
+            $query->where('status', 'approved');
+        }
+
+        $materials = $query->paginate(10);
+
+        // Jika guest (belum login)
+        if (!auth()->check()) {
+            return inertia('Guest/Materials', [
+                'materials' => $materials
+            ]);
+        }
+
+        // Jika user login
         return inertia('EducationalMaterials/Index', [
             'materials' => $materials,
             'canReview' => auth()->user()->isAdmin()
@@ -25,7 +42,9 @@ class EducationalMaterialController extends Controller
     public function create()
     {
         return inertia('EducationalMaterials/Create', [
-            'types' => ['article', 'image', 'pdf', 'audio', 'video']
+            'types' => ['article', 'image', 'pdf', 'audio', 'video'],
+            'categories' => Category::all(), // Pastikan model Category ada
+            'tags' => Tag::all() // Pastikan model Tag ada
         ]);
     }
 
@@ -51,7 +70,7 @@ class EducationalMaterialController extends Controller
             'user_id' => auth()->id(),
             'title' => $request->title,
             'type' => $request->type,
-            'content' => $request->content,
+            'content' => $request->content ?? null,
             'status' => 'pending'
         ]);
 
@@ -59,14 +78,20 @@ class EducationalMaterialController extends Controller
             $path = $request->file('file')->store('educational-materials');
             $material->file_path = $path;
 
+            // For video thumbnails (optional)
             if ($request->type === 'video') {
-                // Generate thumbnail for video (you'll need FFmpeg)
-                $thumbnailPath = $this->generateVideoThumbnail($request->file('file'));
-                $material->thumbnail_path = $thumbnailPath;
+                try {
+                    $thumbnailPath = $this->generateVideoThumbnail($request->file('file'));
+                    $material->thumbnail_path = $thumbnailPath;
+                } catch (\Exception $e) {
+                    // Log error but don't fail
+                    \Log::error('Video thumbnail generation failed: ' . $e->getMessage());
+                }
             }
         }
 
         $material->save();
+
         if ($request->has('tags')) {
             $material->tags()->sync($request->tags);
         }
@@ -109,5 +134,18 @@ class EducationalMaterialController extends Controller
         $frame->save(storage_path('app/public/'.$thumbnailPath));
         
         return $thumbnailPath;
+    }
+
+    public function show(EducationalMaterial $material)
+    {
+        // Authorization check jika diperlukan
+        //$this->authorize('view', $material);
+
+        return inertia('EducationalMaterials/Show', [
+            'material' => $material->load(['user', 'category', 'tags']),
+            'canEdit' => auth()->user()->can('update', $material),
+            'canReview' => auth()->user()->can('review', $material),
+            'canDelete' => auth()->user()->can('delete', $material)
+        ]);
     }
 }

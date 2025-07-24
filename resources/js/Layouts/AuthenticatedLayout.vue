@@ -5,9 +5,14 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage  } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+const page = usePage();
+
+const isAdmin = () => {
+    return page.props.auth.user?.role?.name === 'admin';
+};
 </script>
 
 <template>
@@ -34,20 +39,17 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-                                <NavLink v-if="$page.props.auth.user.role && $page.props.auth.user.role.name === 'admin'" :href="route('admin.users')" :active="route().current('admin.users')">
-                                    Users
+                                <NavLink v-if="isAdmin()" :href="route('admin.users')" :active="route().current('admin.users')">
+                                    Pengguna
                                 </NavLink>
-                                <NavLink v-if="$page.props.auth.user.role && $page.props.auth.user.role.name === 'admin'" :href="route('admin.categories')" :active="route().current('admin.categories')">
-                                    Categories
+                                <NavLink v-if="isAdmin()" :href="route('admin.categories')" :active="route().current('admin.categories')">
+                                    Kategori
                                 </NavLink>
-                                <NavLink :href="route('admin.courses')" :active="route().current('admin.courses')">
+                                <!--NavLink :href="route('admin.courses')" :active="route().current('admin.courses')">
                                     Courses
-                                </NavLink>
-                                <NavLink v-if="$page.props.auth.user.role && $page.props.auth.user.role.name === 'admin'" :href="route('admin.categories')" :active="route().current('admin.categories')">
-                                    Manage Materials
-                                </NavLink>
+                                </NavLink-->
                                 <NavLink :href="route('materials.index')" :active="route().current('materials.index')">
-                                    Educational Materials
+                                    Materi Edukasi
                                 </NavLink>
                             </div>
                         </div>
@@ -144,30 +146,41 @@ const showingNavigationDropdown = ref(false);
                 <!-- Responsive Navigation Menu -->
                 <div :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }" class="sm:hidden">
                     <div class="space-y-1 pb-3 pt-2">
+                        <ResponsiveNavLink :href="route('courses.index')" :active="route().current('courses.index')">
+                        Browse Courses
+                    </ResponsiveNavLink>
+                    
+                    <!-- Hanya tampilkan untuk guest -->
+                    <template v-if="!$page.props.auth.user">
+                        <ResponsiveNavLink :href="route('login')">
+                            Login
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('register')">
+                            Register
+                        </ResponsiveNavLink>
+                    </template>
+                    <template v-else>
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink v-if="$page.props.auth.user.role && $page.props.auth.user.role.name === 'admin'" :href="route('admin.users')" :active="route().current('admin.users')">
-                            Users
+                        <ResponsiveNavLink v-if="isAdmin()" :href="route('admin.users')" :active="route().current('admin.users')">
+                            Pengguna
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink v-if="$page.props.auth.user.role && $page.props.auth.user.role.name === 'admin'" :href="route('admin.categories')" :active="route().current('admin.categories')">
-                            Categories
+                        <ResponsiveNavLink v-if="isAdmin()" :href="route('admin.categories')" :active="route().current('admin.categories')">
+                            Kategori
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('admin.courses')" :active="route().current('admin.courses')">
+                        <!--ResponsiveNavLink :href="route('admin.courses')" :active="route().current('admin.courses')">
                             Courses
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink v-if="$page.props.auth.user.role && $page.props.auth.user.role.name === 'admin'" :href="route('admin.categories')" :active="route().current('admin.categories')">
-                            Manage Materials
-                        </ResponsiveNavLink>
+                        </ResponsiveNavLink-->
                         <ResponsiveNavLink :href="route('materials.index')" :active="route().current('materials.index')">
-                            Educational Materials
+                            Materi Edukasi
                         </ResponsiveNavLink>
+                    </template>
                     </div>
 
                     <!-- Responsive Settings Options -->
-                    <div
-                        class="border-t border-gray-200 pb-1 pt-4"
-                    >
+                    <template v-if="$page.props.auth.user">
+                    <div class="border-t border-gray-200 pb-1 pt-4">
                         <div class="px-4">
                             <div
                                 class="text-base font-medium text-gray-800"
@@ -192,6 +205,7 @@ const showingNavigationDropdown = ref(false);
                             </ResponsiveNavLink>
                         </div>
                     </div>
+                    </template>
                 </div>
             </nav>
 

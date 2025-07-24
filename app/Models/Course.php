@@ -40,4 +40,9 @@ class Course extends Model
                 $q->where('name', 'like', '%' . $search . '%');
             });
     }
+
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class);
+    }
 }

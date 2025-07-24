@@ -17,4 +17,9 @@ class EducationalMaterialPolicy
     {
         return $user->isAdmin() || $user->id === $material->user_id;
     }
+
+    public function approve(User $user, EducationalMaterial $material)
+    {
+        return $user->isAdmin() && $material->status === 'pending';
+    }
 }

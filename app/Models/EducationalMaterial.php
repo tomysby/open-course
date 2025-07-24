@@ -37,7 +37,10 @@ class EducationalMaterial extends Model
 
     public function getThumbnailUrlAttribute()
     {
-        return $this->thumbnail_path ? Storage::disk('educational-materials')->url($this->thumbnail_path) : null;
+        if ($this->thumbnail_path) {
+            return Storage::url($this->thumbnail_path);
+        }
+        return asset('images/default-thumbnail.jpg');
     }
 
     public function getFileExtensionAttribute()

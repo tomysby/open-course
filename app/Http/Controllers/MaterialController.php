@@ -13,12 +13,30 @@ class MaterialController extends Controller
 {
     public function show(Course $course, Material $material)
     {
-        if (!$course->is_published && !auth()->user()?->isAdmin()) {
+        $user = Auth::user();
+        if (!$course->is_published && !($user && $user->isAdmin())) {
             abort(403);
         }
 
         if ($material->course_id !== $course->id) {
             abort(404);
+        }
+
+        if (!Auth::check()) {
+            // Guest: hanya kirim data ringkas
+            return Inertia::render('Materials/Show', [
+                'course' => [
+                    'id' => $course->id,
+                    'title' => $course->title,
+                ],
+                'material' => [
+                    'id' => $material->id,
+                    'title' => $material->title,
+                    'description' => $material->description,
+                    'thumbnail' => $material->thumbnail,
+                ],
+                'isGuest' => true,
+            ]);
         }
 
         $comments = $material->comments()
@@ -32,6 +50,7 @@ class MaterialController extends Controller
             'course' => $course,
             'material' => $material,
             'comments' => $comments,
+            'isGuest' => false,
         ]);
     }
 }
