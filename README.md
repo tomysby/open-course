@@ -1,3 +1,15 @@
+Anggota Kelompok :
+
+```markdown
+
+1. Agtonmy Widayaka - 240401020116 -- Sidoarjo (Ketua)
+2. Febriyan Adipatra - 240401020079 -- Belitung Timur
+3. Oka Maulana -230401020024 -- Jakarta Barat
+4. Raymond Leon Sembiring - 230401020061 -- Batam
+5. Andri Andrita - 220401010136 -- BSD
+
+```
+
 ```markdown
 # 🎓 Open Course Platform
 
@@ -8,7 +20,10 @@ Dibangun dengan teknologi modern:
 - **Frontend**: Vue 3 + Vite
 - **Styling**: Tailwind CSS
 
+```
+
 ---
+
 
 ## 🚀 Fitur Utama
 
