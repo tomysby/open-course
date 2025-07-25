@@ -238,23 +238,3 @@ Jika ada pertanyaan, bug, atau ingin berkolaborasi:
 
 Terima kasih telah menggunakan **Open Course**! 🙏
 ```
-
----
-
-### ✅ Cara Menyimpan sebagai `README.md`:
-
-1. Buka **Notepad** (Windows), **TextEdit** (Mac), atau editor kode (VS Code, dll).
-2. Tempel (paste) seluruh teks di atas.
-3. Simpan dengan nama: `README.md`
-4. Pilih **Save as type: All Files** (jika di Notepad)
-5. Ekstensi harus `.md`, bukan `.txt`
-
-Contoh nama file:  
-✅ `README.md`  
-❌ `README.md.txt`
-
----
-
-Jika kamu ingin saya bantu mengunduhnya sebagai file, kamu bisa salin isi ini ke proyekmu, atau gunakan tools seperti [GitHub Gist](https://gist.github.com) untuk menyimpannya.
-
-Ingin saya buatkan versi **Bahasa Inggris** juga? 😊
