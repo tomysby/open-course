@@ -54,9 +54,9 @@
               <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                   <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-medium text-gray-900">Recent Courses</h3>
-                    <Link :href="route('courses.index')" class="text-sm text-blue-600 hover:text-blue-800">
-                      View All
+                    <h3 class="text-lg font-medium text-gray-900">Materi Terbaru</h3>
+                    <Link :href="route('materials.index')" class="text-sm text-blue-600 hover:text-blue-800">
+                      Lihat Semua
                     </Link>
                   </div>
                   <EducationalMaterialList :courses="recentCourses" />

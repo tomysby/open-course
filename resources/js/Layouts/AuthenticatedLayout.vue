@@ -146,9 +146,6 @@ const isAdmin = () => {
                 <!-- Responsive Navigation Menu -->
                 <div :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }" class="sm:hidden">
                     <div class="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink :href="route('courses.index')" :active="route().current('courses.index')">
-                        Browse Courses
-                    </ResponsiveNavLink>
                     
                     <!-- Hanya tampilkan untuk guest -->
                     <template v-if="!$page.props.auth.user">

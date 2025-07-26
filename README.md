@@ -13,13 +13,13 @@ Anggota Kelompok :
 ```markdown
 # 🎓 Open Course Platform
 
-**Open Course** adalah platform pembelajaran daring (e-learning) berbasis web yang memungkinkan instruktur membuat kursus, serta pengguna (siswa) untuk mengikuti pembelajaran secara gratis atau berbayar.  
+**Open Course** adalah platform pembelajaran daring (e-learning) berbasis web yang memungkinkan instruktur membuat materi edukasi, serta pengguna (member) untuk mengikuti pembelajaran secara gratis atau berbayar.  
 
 Dibangun dengan teknologi modern:
-- **Backend**: Laravel 10
+- **Backend**: Laravel 12
 - **Frontend**: Vue 3 + Vite
 - **Styling**: Tailwind CSS
-
+- **Database**: Mysql
 ```
 
 ---
@@ -28,13 +28,13 @@ Dibangun dengan teknologi modern:
 ## 🚀 Fitur Utama
 
 - 🔐 Autentikasi pengguna (Register, Login, Logout)
-- 📚 Manajemen Kursus (CRUD: Create, Read, Update, Delete)
+- 📚 Manajemen Materi (CRUD: Create, Read, Update, Delete)
 - 🧩 Modul & Pelajaran per kursus
-- 📝 Sistem Pendaftaran (Enrolment) siswa
-- 📈 Pelacakan progres belajar per siswa
+- 📝 Sistem Pendaftaran (Enrolment) member
+- 📈 Pelacakan progres belajar per member
 - 📂 Upload materi (video, PDF, link eksternal)
 - 🎓 Generasi sertifikat (opsional)
-- 👨‍🏫 Role pengguna: Admin, Instruktur, Siswa
+- 👨‍🏫 Role pengguna: Admin, member
 
 ---
 
@@ -42,7 +42,7 @@ Dibangun dengan teknologi modern:
 
 | Komponen       | Teknologi                     |
 |----------------|-------------------------------|
-| Backend        | Laravel 10                    |
+| Backend        | Laravel 12                    |
 | Frontend       | Vue 3 + Vite + Tailwind CSS   |
 | Database       | MySQL / MariaDB               |
 | Autentikasi    | Laravel Sanctum (SPA)         |
@@ -237,4 +237,3 @@ Jika ada pertanyaan, bug, atau ingin berkolaborasi:
 - 💼 GitHub: [@tomysby](https://github.com/tomysby)
 
 Terima kasih telah menggunakan **Open Course**! 🙏
-```

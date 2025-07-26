@@ -56,7 +56,7 @@
               <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
                   <h3 class="text-lg font-medium text-gray-900">Materi Terbaru</h3>
-                  <Link :href="route('admin.courses')" class="text-sm text-blue-600 hover:text-blue-800">
+                  <Link :href="route('materials.index')" class="text-sm text-blue-600 hover:text-blue-800">
                     View All
                   </Link>
                 </div>
